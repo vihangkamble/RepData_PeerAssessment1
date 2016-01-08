@@ -28,7 +28,7 @@ meanStepsperDay <- summarise(group_by(activityData, date), meanSteps = mean(step
 we plot the histogram of the total steps taken per day and also calculate the mean and median of the total number of steps taken per day.
 
 ```r
-hist(totalStepsperDay$totalSteps, breaks = 10)
+hist(totalStepsperDay$totalSteps, breaks = 10 ,xlab = "Total steps per Day ",  main = "Histogram of total steps taken per day")
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
@@ -57,11 +57,14 @@ We calculate the mean and the total number of steps per interval and also find o
 meanStepsperInterval <- summarise(group_by(activityData, interval),meanstepsInterval = mean(steps, na.rm = "TRUE"))
 totalStepsperInterval <- summarise(group_by(activityData, interval), stepsInterval = sum(steps, na.rm = "TRUE"))
 stepsHighestInterval <- totalStepsperInterval[which(totalStepsperInterval$stepsInterval == max(totalStepsperInterval)),]
-plot(meanStepsperInterval$interval, meanStepsperInterval$meanstepsInterval , type = "l", xlab = "Interval", ylab = "Average number of Steps" )
+plot(meanStepsperInterval$interval, meanStepsperInterval$meanstepsInterval , type = "l", xlab = "Interval", ylab = "Average number of Steps" , main = "Time series plot of average steps taken per Day"  )
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
+```
+## [1] "Interval with highest steps is" "835"
+```
 
 ## Imputing missing values
 
@@ -74,10 +77,10 @@ meanStepInterval <- mean(activityData$steps, na.rm = "TRUE")
 activityDataImp <- transform(activityDataInit, newSteps = ifelse(is.na(steps),meanStepInterval , steps))
 totalStepsperDay <- summarise(group_by(activityDataImp, date), totalSteps = sum(newSteps, na.rm = "TRUE"))
 
-hist(totalStepsperDay$totalSteps, breaks = 10)
+hist(totalStepsperDay$totalSteps, breaks = 10 ,xlab = "Total steps per Day ", main = "Histogram of total steps taken per day")
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
 
 ```r
 meanTotalStepsImp <- mean(totalStepsperDay$totalSteps)
@@ -111,4 +114,4 @@ plot(activityDataWeekday$interval[activityDataWeekday$Day!= "Weekday"],activityD
 plot(activityDataWeekday$interval[activityDataWeekday$Day== "Weekday"],activityDataWeekday$steps[activityDataWeekday$Day== "Weekday"], type = "l" , xlab = "interval", ylab = "Average Steps on Weekday" ,col = "blue" , main = "Weekday"  )
 ```
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 

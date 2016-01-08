@@ -25,7 +25,7 @@ meanStepsperDay <- summarise(group_by(activityData, date), meanSteps = mean(step
 ```
 we plot the histogram of the total steps taken per day and also calculate the mean and median of the total number of steps taken per day.
 ```{r,echo=TRUE,message=FALSE,results=TRUE,eval=TRUE}
-hist(totalStepsperDay$totalSteps, breaks = 10)
+hist(totalStepsperDay$totalSteps, breaks = 10 ,xlab = "Total steps per Day ",  main = "Histogram of total steps taken per day")
 meanTotalSteps <- mean(totalStepsperDay$totalSteps)
 medianTotalSteps <- median(totalStepsperDay$totalSteps)
 ```
@@ -43,9 +43,11 @@ We calculate the mean and the total number of steps per interval and also find o
 meanStepsperInterval <- summarise(group_by(activityData, interval),meanstepsInterval = mean(steps, na.rm = "TRUE"))
 totalStepsperInterval <- summarise(group_by(activityData, interval), stepsInterval = sum(steps, na.rm = "TRUE"))
 stepsHighestInterval <- totalStepsperInterval[which(totalStepsperInterval$stepsInterval == max(totalStepsperInterval)),]
-plot(meanStepsperInterval$interval, meanStepsperInterval$meanstepsInterval , type = "l", xlab = "Interval", ylab = "Average number of Steps" )
+plot(meanStepsperInterval$interval, meanStepsperInterval$meanstepsInterval , type = "l", xlab = "Interval", ylab = "Average number of Steps" , main = "Time series plot of average steps taken per Day"  )
 ```
-
+```{r,echo=FALSE,message=FALSE,results=TRUE,eval=TRUE}
+print(c("Interval with highest steps is", stepsHighestInterval$interval))
+```
 
 ## Imputing missing values
 
@@ -57,7 +59,7 @@ meanStepInterval <- mean(activityData$steps, na.rm = "TRUE")
 activityDataImp <- transform(activityDataInit, newSteps = ifelse(is.na(steps),meanStepInterval , steps))
 totalStepsperDay <- summarise(group_by(activityDataImp, date), totalSteps = sum(newSteps, na.rm = "TRUE"))
 
-hist(totalStepsperDay$totalSteps, breaks = 10)
+hist(totalStepsperDay$totalSteps, breaks = 10 ,xlab = "Total steps per Day ", main = "Histogram of total steps taken per day")
 meanTotalStepsImp <- mean(totalStepsperDay$totalSteps)
 medianTotalStepsImp <- median(totalStepsperDay$totalSteps)
 ```
