@@ -7,9 +7,9 @@ output:
 
 
 ## Loading and preprocessing the data
-This is Course Project 1 for Reproducible Research Course. This assignments is post processing activity monitoring data and answering various questions related to the assignments.
+This is Course Project 1 for Reproducible Research Course. This assignment is processing activity monitoring data and answering various questions related to the assignments.
 
-First we read the csv file and remove all the rows which have NAs as steps values.
+First we read the csv file and remove all the rows which have steps values as NAs.
 ```{r,echo=TRUE,message=FALSE,results=TRUE,eval=TRUE}
 library(dplyr)
 activityDataInit <- read.csv("activity.csv")
@@ -23,7 +23,7 @@ We use summarize to calculate the total number of steps and average number of st
 totalStepsperDay <- summarise(group_by(activityData, date), totalSteps = sum(steps, na.rm = "TRUE"))
 meanStepsperDay <- summarise(group_by(activityData, date), meanSteps = mean(steps, na.rm = "TRUE"))
 ```
-we plot the histogram of the total steps taken per day and also calculate the mean and meadian of the total number of steps taken per day.
+we plot the histogram of the total steps taken per day and also calculate the mean and median of the total number of steps taken per day.
 ```{r,echo=TRUE,message=FALSE,results=TRUE,eval=TRUE}
 hist(totalStepsperDay$totalSteps, breaks = 10)
 meanTotalSteps <- mean(totalStepsperDay$totalSteps)
@@ -38,7 +38,7 @@ print(c("Median number of steps taken per Day is", medianTotalSteps))
 
 ## What is the average daily activity pattern?
 
-We calculate the mean and the total number of steps per interval and also find out the interval which has the maximum total steps.We also plot a time series of the average number of steps per interval.
+We calculate the mean and the total number of steps per interval and also find out the interval which has the maximum total steps.We also plot a time series of the average number of steps per interval.  
 ```{r,echo=TRUE,message=FALSE,results=TRUE,eval=TRUE}
 meanStepsperInterval <- summarise(group_by(activityData, interval),meanstepsInterval = mean(steps, na.rm = "TRUE"))
 totalStepsperInterval <- summarise(group_by(activityData, interval), stepsInterval = sum(steps, na.rm = "TRUE"))
@@ -49,7 +49,7 @@ plot(meanStepsperInterval$interval, meanStepsperInterval$meanstepsInterval , typ
 
 ## Imputing missing values
 
-In this part we calculate the total number of missing values in the dateset. All the missing values we replace with the average steps taken per interval. We then calculate the mean and median for the new data frame and also plot histogram for the total steps taken per day.
+In this part we calculate the total number of missing values in the dateset. All the missing values we replace with the average steps taken per interval. We then calculate the mean and median for the new data frame and also plot histogram for the total steps taken per day. It can be observed that the mean and median number of steps per day before imputing and after imputing are very close to each other.
 
 ```{r,echo=TRUE,message=FALSE,results=TRUE,eval=TRUE}
 NAcount <- sum(is.na(activityDataInit$steps))
@@ -70,7 +70,11 @@ print(c("Median number of steps taken per Day is", medianTotalStepsImp))
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
-We create a new factor variable weekday/weekend indicating wheather the given day is weekday or weekend.
+We create a new factor variable weekday/weekend indicating whether the given day is weekday or weekend. We plot the mean steps per day for weekend and weekday and it can be observed that the activity on weekday is higher than that on a weekend.
 ```{r,echo=TRUE,message=FALSE,results=TRUE,eval=TRUE}
 activityDataWeekday <- transform(activityDataImp, Day = ifelse(weekdays(as.Date(activityDataImp$date)) == "Saturday" | weekdays(as.Date(activityDataImp$date)) == "Sunday", "Weekend","Weekday"))  
+
+par(mfrow = c(2, 1) )
+plot(activityDataWeekday$interval[activityDataWeekday$Day!= "Weekday"],activityDataWeekday$steps[activityDataWeekday$Day!= "Weekday"], type = "l",xlab = "interval", ylab = "Average Steps on Weekend" ,col = "red" , main =  "Weekend")
+plot(activityDataWeekday$interval[activityDataWeekday$Day== "Weekday"],activityDataWeekday$steps[activityDataWeekday$Day== "Weekday"], type = "l" , xlab = "interval", ylab = "Average Steps on Weekday" ,col = "blue" , main = "Weekday"  )
 ```
